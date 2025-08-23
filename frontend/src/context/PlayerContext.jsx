@@ -1,5 +1,6 @@
 import { createContext, useEffect, useRef, useState } from 'react';
 import { songsData } from '../assets/assets';
+// import axios from './../../node_modules/axios/lib/axios';
 
 export const PlayerContext = createContext();
 
@@ -7,7 +8,7 @@ const PlayerContextProvider = (props) => {
   const audioRef = useRef();
   const seekBar = useRef();
   const seekBg = useRef();
-
+  
   const [track, setTrack] = useState(songsData[0]);
   const [playStatus, setPlayStatus] = useState(false);
   const [time, setTime] = useState({
@@ -20,6 +21,22 @@ const PlayerContextProvider = (props) => {
       minute: 0,
     },
   });
+  // const [listAlbum, setListAlbum] = useState([]);
+  // const [listSong, setListSong] = useState([]);
+  const url = 'http://localhost:4000'; 
+
+  // const fetchListAlbum = async () => {
+  //   const res = await axios.get(`${url}/api/album/list`);
+  //   setListAlbum(res.data.data)
+  // }
+  // const fetchListSong = async () => {
+  //   const res = await axios.get(`${url}/api/song/list`);
+  //   setListSong(res.data.data)
+  // }
+
+
+
+
 
   const play = () => {
     audioRef.current.play();
@@ -54,7 +71,12 @@ const PlayerContextProvider = (props) => {
 	const seekSong = (e) => {
 		audioRef.current.currentTime = ((e.nativeEvent.offsetX / seekBar.current.offsetWidth) * audioRef.current.duration)
 		
-	}
+  }
+  
+  // useEffect(() => {
+  //   fetchListAlbum()
+  //   fetchListSong()
+  // }, [])
 
   useEffect(() => {
     setTimeout(() => {
@@ -89,7 +111,10 @@ const PlayerContextProvider = (props) => {
     playWithId,
     previous,
 	  next,
-	seekSong,
+    seekSong,
+    // listAlbum,
+    // listSong,
+    url
   };
 
   return <PlayerContext.Provider value={contextValue}>{props.children}</PlayerContext.Provider>;
