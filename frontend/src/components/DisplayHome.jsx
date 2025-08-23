@@ -3,7 +3,9 @@ import AlbumItem from './AlbumItem';
 import Navbar from './Navbar';
 import SongItem from './SongItem';
 
+
 const DisplayHome = () => {
+  
   return (
     <>
       <Navbar />
