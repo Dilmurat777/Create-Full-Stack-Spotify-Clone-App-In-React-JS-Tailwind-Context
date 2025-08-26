@@ -5,15 +5,24 @@ import { useContext } from 'react';
 import { PlayerContext } from './context/PlayerContext';
 
 const App = () => {
-  const {audioRef, track} = useContext(PlayerContext)
+  const { audioRef, track, songsData } = useContext(PlayerContext);
+  
   return (
     <div className="h-screen bg-black">
-      <div className="h-[90%] flex">
-        <Sidebar />
-        <Display />
-      </div>
-      <Player />
-      <audio ref={audioRef} preload='auto' src={track.file}></audio>
+      {songsData.length > 0 && track ? (
+        <>
+          <div className="h-[90%] flex">
+            <Sidebar />
+            <Display />
+          </div>
+          <Player />
+        </>
+      ) : (
+        <div className="flex items-center justify-center h-full text-white">
+          Загрузка данных...
+        </div>
+      )}
+      <audio ref={audioRef} preload="auto" src={track ? track.file : null} />
     </div>
   );
 };
