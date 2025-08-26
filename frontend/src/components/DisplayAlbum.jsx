@@ -1,22 +1,36 @@
-import { useParams } from 'react-router-dom';
+
 import Navbar from './Navbar';
-import { albumsData, assets, songsData } from '../assets/assets';
+import { assets } from '../assets/assets';
 import { useContext } from 'react';
 import { PlayerContext } from '../context/PlayerContext';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-const DisplayAlbum = () => {
-  const { id } = useParams();
-  const albumDate = albumsData[id];
-  const {playWithId} = useContext(PlayerContext)
+
+const DisplayAlbum = ({ albumId, album }) => {
+  const { playWithId, songsData, albumData } = useContext(PlayerContext);
+  const [currentAlbum, setCurrentAlbum] = useState(null);
+
+  useEffect(() => {
+    if (albumData && albumId) {
+      const foundAlbum = albumData.find(item => item._id === albumId);
+      setCurrentAlbum(foundAlbum);
+    }
+  }, [albumData, albumId]);
+
+  if (!currentAlbum) {
+    return <div className="text-white">Загрузка альбома...</div>;
+  }
+
   return (
     <>
       <Navbar />
       <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end">
-        <img className="w-48 rounded" src={albumDate.image} alt="" />
+        <img className="w-48 rounded" src={currentAlbum.image} alt="" />
         <div className="flex flex-col">
           <p>Playlist</p>
-          <h2 className="text-5xl font-bold mb-4 md:text-7xl">{albumDate.name}</h2>
-          <h4 className="">{albumDate.desc}</h4>
+          <h2 className="text-5xl font-bold mb-4 md:text-7xl">{currentAlbum.name}</h2>
+          <h4 className="">{currentAlbum.desc}</h4>
           <div className="mt-1">
             <img className="inline-block w-5" src={assets.spotify_logo} alt="" />
             <b> Spotify </b>- 2,134,123 Likes - <b> 50 songs, </b>- about 2 hr 30 min
@@ -32,7 +46,7 @@ const DisplayAlbum = () => {
         <img className="m-auto w-4" src={assets.clock_icon} alt="" />
       </div>
       <hr />
-      {songsData.map((item, index) => {
+      {songsData.filter((item) => item.album === album.name).map((item, index) => {
         return (
           <div
             onClick={() => playWithId(item.id)}
